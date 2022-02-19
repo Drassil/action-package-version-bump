@@ -47,8 +47,8 @@ runs:
           git pull main-repo ${{ inputs.ref_branch }}
           echo "Updating version"
           npm version ${{ inputs.version_args }}
-          PACKAGE_VERSION=`npm run --silent version`
-          echo "Getting previous changelog"
+          PACKAGE_VERSION=`node -e "console.log(require('./package.json').version);"`
+          echo "Package version: $PACKAGE_VERSION. Getting previous changelog"
           PREV_CHANGELOG=`git show main-repo/dev:CHANGELOG.md || true`
           echo "Composing new changelog"
           echo -e "Rev: $PACKAGE_VERSION\n=============\n ${{ github.event.pull_request.body }}\n\n\n" > CHANGELOG.md
