@@ -38,6 +38,7 @@ runs:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
       - name: Pull and bump version
+        shell: bash
         run: |
           git remote add main-repo ${{ inputs.repository }}
           git config --global user.name ${{ inputs.user_name }}
