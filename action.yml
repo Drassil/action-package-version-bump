@@ -38,21 +38,27 @@ runs:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
       - name: Pull and bump version
+        shell: bash
         run: |
           git remote add main-repo ${{ inputs.repository }}
           git config --global user.name ${{ inputs.user_name }}
           git config --global user.email ${{ inputs.user_email }}
           git config --global pull.rebase ${{ inputs.use_rebase }}
-          git pull main-repo
-          npm version ${{ inputs.version_arguments }}
-          PACKAGE_VERSION=`npm run --silent version`
-          PREV_CHANGELOG=`git show main-repo/dev:CHANGELOG.md || true`
+          git pull main-repo ${{ inputs.ref_branch }}
+          echo "Updating version"
+          npm version --no-git-tag-version ${{ inputs.version_args }}
+          PACKAGE_VERSION=`node -e "console.log(require('./package.json').version);"`
+          echo "Package version: $PACKAGE_VERSION. Getting previous changelog"
+          PREV_CHANGELOG=`git show main-repo/${{ inputs.ref_branch }}:CHANGELOG.md || true`
+          echo "Composing new changelog"
           echo -e "Rev: $PACKAGE_VERSION\n=============\n ${{ github.event.pull_request.body }}\n\n\n" > CHANGELOG.md
           echo -e "$PREV_CHANGELOG" >> CHANGELOG.md
-          git add -u
-          git commit -m "chore: bump version and changelog"
+          echo "Creating commit and pushing"
+          git add -A
+          git commit -m "chore: bump package version to $PACKAGE_VERSION and update changelog"
           git push --force
-  using: 'node12'
-  main: index.js
+      - name: Run script
+        shell: bash
+        run: node index.js
 
     

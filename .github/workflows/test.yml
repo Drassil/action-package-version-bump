@@ -11,13 +11,16 @@ jobs:
     if: github.event.label.name == 'pr-version-bump'
     runs-on: [ubuntu-latest]
     steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Test bump action
         with:
-          repository: https://github.dev/Drassil/action-package-version-bump
+          repository: https://github.com/Drassil/action-package-version-bump
           user_name: 'drassil-git-bot'
           user_email: 'drassil-git-bot@drassil.org'
           ref_branch: 'main'
           use_rebase: true
           version_args: 'prerelease --preid=rc${{ env.RC_VERSION }}'
           node_version: ${{ env.NODE_VERSION }}
-        uses: ../../
+        uses: ./
