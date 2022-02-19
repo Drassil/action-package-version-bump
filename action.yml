@@ -45,11 +45,15 @@ runs:
           git config --global user.email ${{ inputs.user_email }}
           git config --global pull.rebase ${{ inputs.use_rebase }}
           git pull main-repo ${{ inputs.ref_branch }}
+          echo "Updating version"
           npm version ${{ inputs.version_args }}
           PACKAGE_VERSION=`npm run --silent version`
+          echo "Getting previous changelog"
           PREV_CHANGELOG=`git show main-repo/dev:CHANGELOG.md || true`
+          echo "Composing new changelog"
           echo -e "Rev: $PACKAGE_VERSION\n=============\n ${{ github.event.pull_request.body }}\n\n\n" > CHANGELOG.md
           echo -e "$PREV_CHANGELOG" >> CHANGELOG.md
+          echo "Creating commit and pushing"
           git add -u
           git commit -m "chore: bump version and changelog"
           git push --force
