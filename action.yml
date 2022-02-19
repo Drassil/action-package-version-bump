@@ -1,0 +1,58 @@
+name: 'action-package-version-bump'
+description: 'Github action to upgrade the package.json version and create a changelog based on PR description that can be triggered in your workflows'
+inputs:
+  repository:
+    description: 'The repository where to pull the changes'
+    required: true
+  user_name:
+    description: 'Name of the git user to push the changes'
+    required: true
+  user_email:
+    description: 'Email of the git user to push the changes'
+    required: true
+  ref_branch:
+    description: 'Branch to use as a base reference for the version bump'
+    required: false
+    default: 'master'
+  use_rebase:
+    description: 'Use rebase strategy for pull'
+    required: false
+    default: false
+  version_args:
+    description: 'npm version command arguments. '
+    required: false
+    default: 'patch'
+  node_version:
+    description: 'node version used for the npm commands'
+    required: false
+    default: '16'
+runs:
+  using: 'composite'
+  steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ inputs.node_version }}
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: Pull and bump version
+        run: |
+          git remote add main-repo ${{ inputs.repository }}
+          git config --global user.name ${{ inputs.user_name }}
+          git config --global user.email ${{ inputs.user_email }}
+          git config --global pull.rebase ${{ inputs.use_rebase }}
+          git pull main-repo
+          npm version ${{ inputs.version_arguments }}
+          PACKAGE_VERSION=`npm run --silent version`
+          PREV_CHANGELOG=`git show main-repo/dev:CHANGELOG.md || true`
+          echo -e "Rev: $PACKAGE_VERSION\n=============\n ${{ github.event.pull_request.body }}\n\n\n" > CHANGELOG.md
+          echo -e "$PREV_CHANGELOG" >> CHANGELOG.md
+          git add -u
+          git commit -m "chore: bump version and changelog"
+          git push --force
+  using: 'node12'
+  main: index.js
+
+    

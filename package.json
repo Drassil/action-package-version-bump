@@ -1,0 +1,16 @@
+{
+    "name": "action-package-version-bump",
+    "version": "1.0.0-rc1.0",
+    "description": "Github action to upgrade the package.json version and create a changelog based on PR description that can be triggered in your workflows",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "@actions/core": "^1.4.0",
+        "@actions/exec": "^1.1.0",
+        "@actions/github": "^5.0.0"
+    }
+}
