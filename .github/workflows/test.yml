@@ -8,6 +8,7 @@ env:
   RC_VERSION: 1
 jobs:
   version-bump:
+    if: github.event.label.name == 'pr-version-bump'
     runs-on: [ubuntu-latest]
     steps:
       - name: Test bump action
