@@ -54,6 +54,7 @@ runs:
           git commit -m "chore: bump version and changelog"
           git push --force
       - name: Run script
-        run: index.js
+        shell: bash
+        run: node index.js
 
     
