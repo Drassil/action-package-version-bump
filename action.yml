@@ -52,7 +52,7 @@ runs:
           git add -u
           git commit -m "chore: bump version and changelog"
           git push --force
-  using: 'node12'
-  main: index.js
+      - name: Run script
+        run: index.js
 
     
