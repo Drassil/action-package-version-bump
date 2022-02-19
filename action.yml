@@ -57,8 +57,6 @@ runs:
           git add -A
           git commit -m "chore: bump package version to $PACKAGE_VERSION and update changelog"
           git push --force
-      - name: Run script
-        shell: bash
-        run: node index.js
+
 
     
