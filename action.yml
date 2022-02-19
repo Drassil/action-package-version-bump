@@ -46,7 +46,7 @@ runs:
           git config --global pull.rebase ${{ inputs.use_rebase }}
           git pull main-repo ${{ inputs.ref_branch }}
           echo "Updating version"
-          npm version ${{ inputs.version_args }}
+          npm version --no-git-tag-version ${{ inputs.version_args }}
           PACKAGE_VERSION=`node -e "console.log(require('./package.json').version);"`
           echo "Package version: $PACKAGE_VERSION. Getting previous changelog"
           PREV_CHANGELOG=`git show main-repo/${{ inputs.ref_branch }}:CHANGELOG.md || true`
@@ -54,8 +54,8 @@ runs:
           echo -e "Rev: $PACKAGE_VERSION\n=============\n ${{ github.event.pull_request.body }}\n\n\n" > CHANGELOG.md
           echo -e "$PREV_CHANGELOG" >> CHANGELOG.md
           echo "Creating commit and pushing"
-          git add -u
-          git commit -m "chore: bump version and changelog"
+          git add -A
+          git commit -m "chore: bump package version to $PACKAGE_VERSION and update changelog"
           git push --force
       - name: Run script
         shell: bash
