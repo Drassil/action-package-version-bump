@@ -45,7 +45,7 @@ runs:
           git config --global user.email ${{ inputs.user_email }}
           git config --global pull.rebase ${{ inputs.use_rebase }}
           git pull main-repo ${{ inputs.ref_branch }}
-          npm version ${{ inputs.version_arguments }}
+          npm version ${{ inputs.version_args }}
           PACKAGE_VERSION=`npm run --silent version`
           PREV_CHANGELOG=`git show main-repo/dev:CHANGELOG.md || true`
           echo -e "Rev: $PACKAGE_VERSION\n=============\n ${{ github.event.pull_request.body }}\n\n\n" > CHANGELOG.md
