@@ -19,3 +19,6 @@ Once you have defined what kind of event should trigger it, just add this action
 There are several required options for this action that are listed here: https://github.com/Drassil/action-package-version-bump/blob/2d8b5f7b520539600b819b150f0f5548fb10006c/action.yml#L4-L28
 
 An example of how to use it is available here: https://github.com/Drassil/action-package-version-bump/blob/2d8b5f7b520539600b819b150f0f5548fb10006c/.github/workflows/test.yml#L1-L26
+
+
+Just a dummy change
