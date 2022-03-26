@@ -36,7 +36,6 @@ runs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.full_name }}
           fetch-depth: 0
       - name: Pull and bump version
         shell: bash
@@ -57,7 +56,7 @@ runs:
           echo "Creating commit and pushing"
           git add -A
           git commit -m "chore: bump package version to $PACKAGE_VERSION and update changelog"
-          git push --force
+          git push --force ${{ github.event.pull_request.head.html_url }}
 
 
     
