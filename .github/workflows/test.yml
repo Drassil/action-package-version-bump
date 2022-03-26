@@ -16,7 +16,6 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
       - name: Test bump action
         with:
-          repository: https://github.com/Drassil/action-package-version-bump
           user_name: 'drassil-git-bot'
           user_email: 'drassil-git-bot@drassil.org'
           ref_branch: 'main'
