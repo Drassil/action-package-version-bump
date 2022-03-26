@@ -36,7 +36,7 @@ runs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.head.ref }}
-          repository: ${{ github.event.pull_request.head.full_name }}
+          repository: ${{ github.event.pull_request.repository.full_name }}
           fetch-depth: 0
       - name: Pull and bump version
         shell: bash
