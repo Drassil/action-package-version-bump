@@ -2,7 +2,7 @@ name: 'action-package-version-bump'
 description: 'Github action to upgrade the package.json version and create a changelog based on PR description'
 inputs:
   repository:
-    description: 'The repository where to pull the changes'
+    description: 'The github repository where to pull the changes (only the path, without the host)'
     required: false
   user_name:
     description: 'Name of the git user to push the changes'
@@ -40,8 +40,7 @@ runs:
       - name: Pull and bump version
         shell: bash
         run: |
-          CUR_REPO=https://github.com/${{ github.repository }}
-          git remote add main-repo ${{ inputs.repository || $CUR_REPO }}
+          git remote add main-repo https://github.com/${{ inputs.repository || github.repository }}
           git config --global user.name ${{ inputs.user_name }}
           git config --global user.email ${{ inputs.user_email }}
           git config --global pull.rebase ${{ inputs.use_rebase }}
