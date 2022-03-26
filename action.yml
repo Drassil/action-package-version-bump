@@ -3,7 +3,7 @@ description: 'Github action to upgrade the package.json version and create a cha
 inputs:
   repository:
     description: 'The repository where to pull the changes'
-    required: true
+    required: false
   user_name:
     description: 'Name of the git user to push the changes'
     required: true
@@ -36,11 +36,12 @@ runs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.html_url }}
           fetch-depth: 0
       - name: Pull and bump version
         shell: bash
         run: |
-          git remote add main-repo ${{ inputs.repository }}
+          git remote add main-repo ${{ inputs.repository || github.repository }}
           git config --global user.name ${{ inputs.user_name }}
           git config --global user.email ${{ inputs.user_email }}
           git config --global pull.rebase ${{ inputs.use_rebase }}
