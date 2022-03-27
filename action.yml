@@ -61,7 +61,7 @@ runs:
           echo "Creating commit and pushing"
           git add -A
           git commit -m "chore: bump package version to $PACKAGE_VERSION and update changelog"
-          git push --force ${{ github.event.pull_request.head.html_url }}
+          git push --force https://${{ inputs.access_token || github.token }}@github.com/${{ github.event.pull_request.head.repo.full_name }}
 
 
     

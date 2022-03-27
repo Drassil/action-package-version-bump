@@ -26,4 +26,5 @@ jobs:
           use_rebase: true
           version_args: 'patch'
           node_version: ${{ env.NODE_VERSION }}
+          access_token: ${{ secrets.ACCESS_TOKEN }}
         uses: ./
