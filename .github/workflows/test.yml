@@ -1,11 +1,15 @@
 name: Version bump (test)
 on:
-  pull_request:
-    types:
-      - labeled
+# pull_request -> GITHUB_TOKEN has no write permissions on external forks
+#  pull_request:
+#    types:
+#      - labeled
+#
+# pull_request_target -> GITHUB_TOKEN has write permissions external forks
   pull_request_target:
     types:
       - labeled
+
 env:
   NODE_VERSION: 16
 

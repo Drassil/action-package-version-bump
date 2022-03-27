@@ -1,7 +1,5 @@
 # action-package-version-bump
 
-**DISCLAIMER**: this action works only on pull requests that are created from branches of the same target repo. Because of this issue: https://github.com/actions/checkout/issues/455
-
 Github action to upgrade the package.json version and create a changelog based on PR description that can be triggered in your workflows
 
 
