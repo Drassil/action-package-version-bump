@@ -25,7 +25,6 @@ jobs:
           user_name: 'drassil-git-bot'
           user_email: 'drassil-git-bot@drassil.org'
           ref_branch: 'main'
-          use_rebase: true
           version_args: 'patch'
           node_version: ${{ env.NODE_VERSION }}
           access_token: ${{ secrets.ACCESS_TOKEN }}
