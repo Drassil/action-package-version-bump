@@ -26,6 +26,9 @@ inputs:
     description: 'node version used for the npm commands'
     required: false
     default: '16'
+  access_token:
+    description: 'Personal access token to clone the repository. Default: github.token'
+    required: false
 runs:
   using: 'composite'
   steps:
@@ -38,6 +41,7 @@ runs:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           fetch-depth: 0
+          token: ${{ inputs.access_token || github.token }}
       - name: Pull and bump version
         shell: bash
         run: |
