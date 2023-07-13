@@ -32,6 +32,7 @@ inputs:
   skip_push:
     description: 'Skip pushing committed changes to the repository. Default: false'
     required: true
+    type: boolean
     default: false
 runs:
   using: 'composite'
