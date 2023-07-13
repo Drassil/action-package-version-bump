@@ -29,8 +29,8 @@ inputs:
   access_token:
     description: 'Personal access token to clone the repository. Default: github.token'
     required: false
-  push_to_repo:
-    description: 'Push committed changes to the repository. Default: true'
+  skip_push:
+    description: 'Skip pushing committed changes to the repository. Default: false'
     required: true
     default: false
 runs:
@@ -66,7 +66,7 @@ runs:
           git add -A
           git commit -m "chore: bump package version to $PACKAGE_VERSION and update changelog"
       - name: Push
-        if: (!github.event.inputs.push_to_repo)
+        if: (!github.event.inputs.skip_push)
         shell: bash
         run: |          
           git push --force https://${{ inputs.access_token || github.token }}@github.com/${{ github.event.pull_request.head.repo.full_name }}
