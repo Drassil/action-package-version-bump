@@ -25,3 +25,6 @@ An example of how to use it is available here: https://github.com/Drassil/action
 This is a video of how this action works:
 
 https://user-images.githubusercontent.com/147092/154951557-66b8b838-0f04-4d01-aebc-1404414d4ee6.mp4
+
+
+Last update: 1689865111
