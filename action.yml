@@ -67,7 +67,7 @@ runs:
           git add -A
           git commit -m "chore: bump package version to $PACKAGE_VERSION and update changelog"
       - name: Push
-        if: ${{ !inputs.skip_push }}
+        if: ${{ inputs.skip_push != "true" }}
         shell: bash
         run: |          
           git push --force https://${{ inputs.access_token || github.token }}@github.com/${{ github.event.pull_request.head.repo.full_name }}
