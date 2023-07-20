@@ -34,3 +34,13 @@ jobs:
           version_args: 'patch'
           node_version: ${{ env.NODE_VERSION }}
         uses: ./
+
+      - name: Test bump action (without push)
+        with:
+          user_name: 'drassil-git-bot'
+          user_email: 'drassil-git-bot@drassil.org'
+          ref_branch: 'main'
+          version_args: 'patch'
+          node_version: ${{ env.NODE_VERSION }}
+          skip_push: true
+        uses: ./
