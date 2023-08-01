@@ -96,6 +96,9 @@ runs:
 
           npm install --package-lock-only
 
+          git add -A
+          git commit -m "chore: restore package version to $target_version and restored changelog"
+
       - name: Push
         if: ${{ inputs.skip_push != 'true' }}
         shell: bash
