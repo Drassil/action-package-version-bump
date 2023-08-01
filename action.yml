@@ -78,6 +78,8 @@ runs:
       - name: Restore 
         if: inputs.action == 'restore'
         shell: bash
+        env:
+          GH_TOKEN: ${{ inputs.access_token || github.token }}
         run: |
           # Get the name of the target branch
           target_branch=$(gh pr view ${{ github.event.pull_request.number }} --json baseRefName -q '.baseRefName')
