@@ -78,14 +78,14 @@ runs:
       - name: Restore 
         if: inputs.action == 'restore'
         shell: bash
-        env:
-          GH_TOKEN: ${{ inputs.access_token || github.token }}
         run: |
+          git remote add main-repo https://github.com/${{ inputs.repository || github.repository }}
+          
           # Get the name of the target branch
-          target_branch=$(gh pr view ${{ github.event.pull_request.number }} --json baseRefName -q '.baseRefName')
+          target_branch=$(echo "${{ github.event.pull_request }}" | jq -r .base.ref)
 
           # Fetch the target branch
-          git fetch origin $target_branch
+          git fetch main-repo $target_branch:$target_branch
 
           # Get the last common commit of the current PR branch and the target branch
           common_commit=$(git merge-base HEAD $target_branch)
@@ -103,6 +103,7 @@ runs:
 
           git add -A
           git commit -m "chore: restore package version to $target_version and restored changelog"
+
 
       - name: Push
         if: ${{ inputs.skip_push != 'true' }}
