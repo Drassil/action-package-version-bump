@@ -9,6 +9,7 @@ on:
   pull_request_target:
     types:
       - labeled
+      - unlabeled
 
 env:
   NODE_VERSION: 16
