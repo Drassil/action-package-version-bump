@@ -84,6 +84,9 @@ runs:
           # Get the name of the target branch
           target_branch=$(gh pr view ${{ github.event.pull_request.number }} --json baseRefName -q '.baseRefName')
 
+          # Fetch the target branch
+          git fetch origin $target_branch
+
           # Get the last common commit of the current PR branch and the target branch
           common_commit=$(git merge-base HEAD $target_branch)
 
