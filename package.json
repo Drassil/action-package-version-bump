@@ -1,6 +1,6 @@
 {
     "name": "action-package-version-bump",
-    "version": "1.0.11",
+    "version": "1.0.12",
     "description": "Github action to upgrade the package.json version and create a changelog based on PR description that can be triggered in your workflows",
     "main": "index.js",
     "scripts": {
