@@ -85,7 +85,6 @@ runs:
         if: inputs.action == 'restore'
         shell: bash
         run: |
-          set -x
           # Get the name of the target branch
           target_branch=$(gh pr view ${{ github.event.pull_request.number }} --json baseRefName -q '.baseRefName')
 
@@ -104,7 +103,7 @@ runs:
           # Replace the CHANGELOG.md content with the content of the CHANGELOG.md from the common commit
           git show $common_commit:CHANGELOG.md > CHANGELOG.md
 
-          npm install --package-lock-only
+          npm install --package-lock-only --ignore-scripts
 
           git add -A
           git commit -m "chore: restore package version to $target_version and restored changelog"
