@@ -54,14 +54,18 @@ runs:
           fetch-depth: 0
           token: ${{ inputs.access_token || github.token }}
 
-      - name: Pull and bump version
+      - name: Git configure
         shell: bash
-        if: inputs.action == 'bump'
         run: |
           git remote add main-repo https://github.com/${{ inputs.repository || github.repository }}
           git config --global user.name ${{ inputs.user_name }}
           git config --global user.email ${{ inputs.user_email }}
           git config --global pull.rebase ${{ inputs.use_rebase }}
+
+      - name: Pull and bump version
+        shell: bash
+        if: inputs.action == 'bump'
+        run: |
           git pull main-repo ${{ inputs.ref_branch }}
           echo "Updating version"
           npm version --no-git-tag-version ${{ inputs.version_args }}
@@ -79,8 +83,6 @@ runs:
         if: inputs.action == 'restore'
         shell: bash
         run: |
-          git remote add main-repo https://github.com/${{ inputs.repository || github.repository }}
-          
           # Get the name of the target branch
           target_branch=$(echo "${{ github.event.pull_request }}" | jq -r .base.ref)
 
