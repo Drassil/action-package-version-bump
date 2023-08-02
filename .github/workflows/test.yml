@@ -9,6 +9,7 @@ on:
   pull_request:
     types:
       - labeled
+      - unlabeled
 
 env:
   NODE_VERSION: 16
@@ -18,14 +19,15 @@ permissions:
   pull-requests: write
 
 jobs:
-  version-bump:
+  version-bump-test-1:
     if: github.event.label.name == 'pr-version-bump'
     runs-on: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
+
       - name: Test bump action
         with:
           user_name: 'drassil-git-bot'
@@ -34,6 +36,25 @@ jobs:
           version_args: 'patch'
           node_version: ${{ env.NODE_VERSION }}
         uses: ./
+
+      - name: Test restore action
+        with:
+          user_name: 'drassil-git-bot'
+          user_email: 'drassil-git-bot@drassil.org'
+          ref_branch: 'main'
+          version_args: 'patch'
+          node_version: ${{ env.NODE_VERSION }}
+          action: 'restore'
+        uses: ./
+
+  version-bump-test-2:
+    if: github.event.label.name == 'pr-version-bump'
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Test bump action (without push)
         with:
