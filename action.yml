@@ -64,6 +64,8 @@ runs:
 
       - name: Pull and bump version
         shell: bash
+        env:
+          GH_TOKEN: ${{ inputs.access_token || github.token }}
         if: inputs.action == 'bump'
         run: |
           git pull main-repo ${{ inputs.ref_branch }}
