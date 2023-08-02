@@ -57,7 +57,7 @@ runs:
       - name: Git configure
         shell: bash
         run: |
-          git remote add main-repo https://github.com/${{ inputs.repository || github.repository }}
+          git config remote.main-repo.url >&- || git remote add main-repo https://github.com/${{ inputs.repository || github.repository }}
           git config --global user.name ${{ inputs.user_name }}
           git config --global user.email ${{ inputs.user_email }}
           git config --global pull.rebase ${{ inputs.use_rebase }}
