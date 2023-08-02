@@ -85,7 +85,7 @@ runs:
         run: |
           set -x
           # Get the name of the target branch
-          target_branch=$(echo "${{ github.event.pull_request }}" | jq -r .base.ref)
+          target_branch=$(gh pr view ${{ github.event.pull_request.number }} --json baseRefName -q '.baseRefName')
 
           # Fetch the target branch
           git fetch main-repo $target_branch:$target_branch
