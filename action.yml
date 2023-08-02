@@ -64,8 +64,6 @@ runs:
 
       - name: Pull and bump version
         shell: bash
-        env:
-          GH_TOKEN: ${{ inputs.access_token || github.token }}
         if: inputs.action == 'bump'
         run: |
           git pull main-repo ${{ inputs.ref_branch }}
@@ -81,7 +79,9 @@ runs:
           git add -A
           git commit -m "chore: bump package version to $PACKAGE_VERSION and update changelog"
 
-      - name: Restore 
+      - name: Restore
+        env:
+          GH_TOKEN: ${{ inputs.access_token || github.token }}
         if: inputs.action == 'restore'
         shell: bash
         run: |
