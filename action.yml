@@ -93,6 +93,7 @@ runs:
           GH_TOKEN: ${{ inputs.access_token || github.token }}
         shell: bash
         run: |
+          # We always need to restore to make sure we can pull after without conflicts on the changed files
           git add -A
           git commit -m "chore: restore package version to ${TARGET_VERSION} and restored changelog"
 
@@ -102,6 +103,9 @@ runs:
         run: |
           # Use the TARGET_BRANCH environment variable
           target_branch=${TARGET_BRANCH}
+
+          # We need to pull to avoid conflicts
+          git pull main-repo $target_branch
 
           # Get the version of the package from the ref_branch
           target_version=$(git show main-repo/$target_branch:package.json | jq -r '.version')
