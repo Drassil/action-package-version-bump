@@ -35,6 +35,10 @@ inputs:
     description: 'Action to perform: "bump" or "restore"'
     required: true
     default: 'bump'
+  use_rebase:
+    description: 'Use rebase strategy for pull'
+    required: false
+    default: false
 
 
 runs:
@@ -65,6 +69,7 @@ runs:
           git config remote.main-repo.url >&- || git remote add main-repo https://github.com/${{ github.event.pull_request.head.repo.full_name }}
           git config --global user.name ${{ inputs.user_name }}
           git config --global user.email ${{ inputs.user_email }}
+          git config --global pull.rebase ${{ inputs.use_rebase }}
 
           # Use the TARGET_BRANCH environment variable
           target_branch=${TARGET_BRANCH}
