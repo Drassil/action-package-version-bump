@@ -1,9 +1,6 @@
 name: 'action-package-version-bump'
-description: 'Github action to upgrade the package.json version and create a changelog based on PR description'
+description: 'Github action to upgrade the package.json version and create a changelog based on PR description. Only works with pull_request and pull_request_target events'
 inputs:
-  repository:
-    description: 'The github repository where to pull the changes (only the path, without the host)'
-    required: false
   user_name:
     description: 'Name of the git user to push the changes'
     required: true
@@ -65,7 +62,7 @@ runs:
       - name: Restore files
         shell: bash
         run: |
-          git config remote.main-repo.url >&- || git remote add main-repo https://github.com/${{ inputs.repository || github.repository }}
+          git config remote.main-repo.url >&- || git remote add main-repo https://github.com/${{ github.event.pull_request.head.repo.full_name }}
           git config --global user.name ${{ inputs.user_name }}
           git config --global user.email ${{ inputs.user_email }}
 
@@ -73,7 +70,7 @@ runs:
           target_branch=${TARGET_BRANCH}
 
           # Fetch the target branch
-          git fetch main-repo $target_branch:$target_branch
+          git fetch --unshallow main-repo $target_branch:$target_branch
 
           # Get the last common commit of the current PR branch and the target branch
           common_commit=$(git merge-base HEAD $target_branch)
