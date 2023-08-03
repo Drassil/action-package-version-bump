@@ -70,7 +70,7 @@ runs:
           target_branch=${TARGET_BRANCH}
 
           # Fetch the target branch
-          git fetch --unshallow main-repo $target_branch:$target_branch
+          git fetch main-repo $target_branch:$target_branch
 
           # Get the last common commit of the current PR branch and the target branch
           common_commit=$(git merge-base HEAD $target_branch)
