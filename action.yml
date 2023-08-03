@@ -99,7 +99,7 @@ runs:
           target_branch=$ref_branch_input || $(gh pr view ${{ github.event.pull_request.number }} --json baseRefName -q '.baseRefName')
 
           # Get the version of the package from the ref_branch
-          target_version=$(git show main-repo/target_branch:package.json | jq -r '.version')
+          target_version=$(git show main-repo/$target_branch:package.json | jq -r '.version')
 
           # Use the latest version of the package.json from the ref_branch
           jq ".version = \"$target_version\"" package.json > temp.json && mv temp.json package.json
@@ -118,7 +118,7 @@ runs:
           PACKAGE_VERSION=`cat package.json | jq -r '.version'`
 
           echo "Package version: $PACKAGE_VERSION. Getting previous changelog"
-          PREV_CHANGELOG=`git show main-repo/target_branch:CHANGELOG.md || true`
+          PREV_CHANGELOG=`git show main-repo/$target_branch:CHANGELOG.md || true`
 
           echo "Composing new changelog"
           echo -e "Rev: $PACKAGE_VERSION\n=============\n ${{ github.event.pull_request.body }}\n\n\n" > CHANGELOG.md
