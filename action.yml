@@ -35,6 +35,10 @@ inputs:
     description: 'Action to perform: "bump" or "restore"'
     required: true
     default: 'bump'
+  use_rebase:
+    description: 'Use rebase strategy for pull'
+    required: false
+    default: false
 
 
 runs:
@@ -65,12 +69,13 @@ runs:
           git config remote.main-repo.url >&- || git remote add main-repo https://github.com/${{ github.event.pull_request.head.repo.full_name }}
           git config --global user.name ${{ inputs.user_name }}
           git config --global user.email ${{ inputs.user_email }}
+          git config --global pull.rebase ${{ inputs.use_rebase }}
 
           # Use the TARGET_BRANCH environment variable
           target_branch=${TARGET_BRANCH}
 
           # Fetch the target branch
-          git fetch --unshallow main-repo $target_branch:$target_branch
+          git fetch main-repo $target_branch:$target_branch
 
           # Get the last common commit of the current PR branch and the target branch
           common_commit=$(git merge-base HEAD $target_branch)
@@ -91,9 +96,9 @@ runs:
       - name: Create Restore Commit
         env:
           GH_TOKEN: ${{ inputs.access_token || github.token }}
-        if: inputs.action == 'restore'
         shell: bash
         run: |
+          # We always need to restore to make sure we can pull after without conflicts on the changed files
           git add -A
           git commit -m "chore: restore package version to ${TARGET_VERSION} and restored changelog"
 
@@ -103,6 +108,9 @@ runs:
         run: |
           # Use the TARGET_BRANCH environment variable
           target_branch=${TARGET_BRANCH}
+
+          # We need to pull to avoid conflicts
+          git pull main-repo $target_branch
 
           # Get the version of the package from the ref_branch
           target_version=$(git show main-repo/$target_branch:package.json | jq -r '.version')
