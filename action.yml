@@ -43,10 +43,18 @@ inputs:
 runs:
   using: 'composite'
   steps:
+      - name: Define target_branch
+        shell: bash
+        run: |
+          ref_branch_input=${{ inputs.ref_branch }}
+          target_branch=$ref_branch_input || $(gh pr view ${{ github.event.pull_request.number }} --json baseRefName -q '.baseRefName')
+          echo "TARGET_BRANCH=$target_branch" >> $GITHUB_ENV
+
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: ${{ inputs.node_version }}
+
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
@@ -61,9 +69,8 @@ runs:
           git config --global user.name ${{ inputs.user_name }}
           git config --global user.email ${{ inputs.user_email }}
 
-          # Get the name of the target branch
-          ref_branch_input=${{ inputs.ref_branch }}
-          target_branch=$ref_branch_input || $(gh pr view ${{ github.event.pull_request.number }} --json baseRefName -q '.baseRefName')
+          # Use the TARGET_BRANCH environment variable
+          target_branch=${TARGET_BRANCH}
 
           # Fetch the target branch
           git fetch main-repo $target_branch:$target_branch
@@ -82,6 +89,8 @@ runs:
 
           npm install --package-lock-only --ignore-scripts
 
+          echo "TARGET_VERSION=$target_version" >> $GITHUB_ENV
+
       - name: Create Restore Commit
         env:
           GH_TOKEN: ${{ inputs.access_token || github.token }}
@@ -89,14 +98,14 @@ runs:
         shell: bash
         run: |
           git add -A
-          git commit -m "chore: restore package version to $target_version and restored changelog"
+          git commit -m "chore: restore package version to ${TARGET_VERSION} and restored changelog"
 
       - name: Bump version
         shell: bash
         if: inputs.action == 'bump'
         run: |
-          ref_branch_input=${{ inputs.ref_branch }}
-          target_branch=$ref_branch_input || $(gh pr view ${{ github.event.pull_request.number }} --json baseRefName -q '.baseRefName')
+          # Use the TARGET_BRANCH environment variable
+          target_branch=${TARGET_BRANCH}
 
           # Get the version of the package from the ref_branch
           target_version=$(git show main-repo/$target_branch:package.json | jq -r '.version')
@@ -111,9 +120,8 @@ runs:
         shell: bash
         if: inputs.action == 'bump' && inputs.skip_changelog != 'true'
         run: |
-          # Get the name of the target branch
-          ref_branch_input=${{ inputs.ref_branch }}
-          target_branch=$ref_branch_input || $(gh pr view ${{ github.event.pull_request.number }} --json baseRefName -q '.baseRefName')
+          # Use the TARGET_BRANCH environment variable
+          target_branch=${TARGET_BRANCH}
 
           PACKAGE_VERSION=`cat package.json | jq -r '.version'`
 
@@ -124,6 +132,8 @@ runs:
           echo -e "Rev: $PACKAGE_VERSION\n=============\n ${{ github.event.pull_request.body }}\n\n\n" > CHANGELOG.md
           echo -e "$PREV_CHANGELOG" >> CHANGELOG.md
 
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+
 
       - name: Create Bump Commit
         env:
@@ -132,7 +142,7 @@ runs:
         shell: bash
         run: |
           git add -A
-          git commit -m "chore: bump package version to $PACKAGE_VERSION and update changelog"
+          git commit -m "chore: bump package version to ${PACKAGE_VERSION} and update changelog"
 
 
       - name: Push
