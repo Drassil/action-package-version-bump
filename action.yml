@@ -100,7 +100,7 @@ runs:
         run: |
           # We always need to restore to make sure we can pull after without conflicts on the changed files
           git add -A
-          git commit -m "chore: restore package version to ${TARGET_VERSION} and restored changelog"
+          git diff-index --quiet HEAD || git commit -m "chore: restore package version to ${TARGET_VERSION} and restored changelog"
 
       - name: Bump version
         shell: bash
