@@ -12,7 +12,7 @@ on:
       - unlabeled
 
 env:
-  NODE_VERSION: 16
+  NODE_VERSION: 18
 
 permissions:
   contents: write

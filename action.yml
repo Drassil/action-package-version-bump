@@ -17,7 +17,7 @@ inputs:
   node_version:
     description: 'node version used for the npm commands'
     required: false
-    default: '16'
+    default: '18'
   access_token:
     description: 'Personal access token to clone the repository. Default: github.token'
     required: false
